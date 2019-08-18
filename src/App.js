@@ -1,26 +1,32 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React from 'react'
+import firebase from 'firebase/app'
+import 'firebase/auth'
+import AppRouter from './AppRouter';
 
-function App() {
+export const AuthContext = React.createContext()
+
+const App = props => {
+  const [authState, setAuthState] = React.useState({
+    authenticating: true,
+    user: null
+  })
+  React.useEffect(() => {
+    console.log('useEffect Auth')
+    return firebase.auth().onAuthStateChanged((user) => {
+      setAuthState({
+        authenticating: false,
+        user: user
+      })
+    })
+    // eslint-disable-next-line
+  }, [])
+
+  console.log(process.env.REACT_APP_GOOGLE_APPLICATION_CREDENTIALS)
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    <AuthContext.Provider value={authState}>
+      <AppRouter />
+    </AuthContext.Provider>
+  )
 }
 
 export default App;
