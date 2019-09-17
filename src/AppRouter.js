@@ -10,6 +10,7 @@ import Login from './Login'
 import { AuthContext } from './App'
 import Spinner from './Spinner'
 import styled from 'styled-components'
+import DownloadPage from './DownloadPage';
 
 const SpinnerDiv = styled.div`
   display: flex;
@@ -47,6 +48,7 @@ const AppRouter = secureRoute(props => {
     <Route path='/manage' component={Manager} />
     <Route exact path='/manage/:id' component={ManageTemplate} />
     <Route exact path='/manage/:id/:formId' component={ManageForm} />
+    <Route exact path='/download' component={DownloadPage} />
   </BrowserRouter>
 })
 

@@ -153,7 +153,7 @@ const Detector = props => {
                       newPreItem['detected'] = result.data.text
                     }
                     else {
-                      newPreItem['detected'] = null
+                      newPreItem['detected'] = ''
                     }
                     newPreItem['downloadURL'] = downloadURL
                     return newPreItem

@@ -8,6 +8,7 @@ const NavBar = props => {
     <Link to='/define' ><button>Define</button></Link>
     <Link to='/detect' ><button>Detect</button></Link>
     <Link to='/manage' ><button>Manage</button></Link>
+    <Link to='/download' ><button>Download</button></Link>
     <button onClick={e => {
       firebase.auth().signOut()
     }}>Logout</button>
