@@ -5,13 +5,8 @@ import { useArray } from './AreaDefiner';
 
 const DownloadPage = props => {
   const [templates, setTemplates] = React.useState([])
-  React.useEffect(() => {
-    var finishedDownloading = true
-    templates.forEach(template => {
-      if (template.selected && template.forms === undefined) {
-        finishedDownloading = false
-      }
-    })
+  const handleTemplatesChange = () => {
+    var finishedDownloading = templates.filter(template => template.selected && template.forms === undefined).length === 0
     if (finishedDownloading && templates.filter(template => template.selected).length > 0) {
       console.log('Finished downloading!')
       const rows = []
@@ -23,7 +18,10 @@ const DownloadPage = props => {
         selectedTemplate.forms.forEach(form => {
           var added = false
           addedPeople.forEach(people => {
-            if (people['First name'].trim() === form['First name'].text.trim() && people['Last name'].trim() === form['Last name'].text.trim() && people['DOB'].trim() === form['DOB'].text.trim()) {
+            const sameFirstname = people['First name'].trim() === form['First name'].text.trim()
+            const sameLastname = people['Last name'].trim() === form['Last name'].text.trim()
+            const sameDOB = people['DOB'].trim() === form['DOB'].text.trim()
+            if (sameFirstname && sameLastname && sameDOB) {
               added = true
             }
           })
@@ -33,7 +31,10 @@ const DownloadPage = props => {
             templates.filter(template => template.selected && template.id !== selectedTemplate.id)
               .forEach(otherTemplate => {
                 otherTemplate.forms.forEach(otherForm => {
-                  if (otherForm['First name'].text.trim() === currentForm['First name'].text.trim() && otherForm['Last name'].text.trim() === currentForm['Last name'].text.trim() && otherForm['DOB'].text.trim() === currentForm['DOB'].text.trim()) {
+                  const sameFirstname = otherForm['First name'].text.trim() === currentForm['First name'].text.trim()
+                  const sameLastname = otherForm['Last name'].text.trim() === currentForm['Last name'].text.trim()
+                  const sameDOB = otherForm['DOB'].text.trim() === currentForm['DOB'].text.trim()
+                  if (sameFirstname && sameLastname && sameDOB) {
                     currentForm = { ...currentForm, ...otherForm }
                   }
                 })
@@ -43,7 +44,7 @@ const DownloadPage = props => {
               currentRow.push('')
             })
             headers.forEach((header, index) => {
-              if (currentForm[header]) {
+              if (currentForm[header] !== undefined) {
                 currentRow[index] = currentForm[header].text.trim()
               }
             })
@@ -56,12 +57,10 @@ const DownloadPage = props => {
           }
         })
       })
-
-      console.log(rows)
       exportToCsv('test.csv', rows)
     }
-  }, [templates])
-  React.useEffect(() => {
+  }
+  const fetchTemplates = () => {
     firebase.firestore().collection('templates').get()
       .then((querySnapshot) => {
         var newTemplates = []
@@ -74,14 +73,14 @@ const DownloadPage = props => {
       .catch(function (error) {
         console.log("Error getting documents: ", error);
       });
-  }, [])
+  }
+  React.useEffect(handleTemplatesChange, [templates])
+  React.useEffect(fetchTemplates, [])
 
   const getColumns = () => {
     var temp = ['First name', 'Last name', 'DOB']
-    templates.filter((template) => {
-      return template.selected
-    })
-      .forEach((template) => {
+    templates.filter(template => template.selected)
+      .forEach(template => {
         template.data.formSpec.filter(spec => {
           return spec.name !== 'First name' && spec.name !== 'Last name' && spec.name !== 'DOB'
         }).forEach(spec => {
@@ -146,8 +145,6 @@ const DownloadPage = props => {
       </div>
     })}
     <button onClick={e => {
-
-
       templates.filter(template => template.selected).forEach(template => {
         firebase.firestore().collection('templates').doc(template.id).collection('data').get()
           .then((querySnapshot) => {

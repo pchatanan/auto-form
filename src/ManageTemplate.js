@@ -51,7 +51,7 @@ const ManageTemplate = props => {
     <label>Value</label>
     <input value={value} onChange={e => { setValue(e.target.value) }}></input>
     <button onClick={e => {
-      const temp = forms.filter(form => {
+      const checkSatisfyCriteria = form => {
         if (key === 'Notes' && method === 'contains') {
           var result = false
           form.data.Notes.forEach(note => {
@@ -77,8 +77,8 @@ const ManageTemplate = props => {
             return false
           }
         }
-      })
-      setResults(temp)
+      }
+      setResults(forms.filter(checkSatisfyCriteria))
       setShowSearch(true)
     }}>Search</button>
     {!showSearch && forms.map((form, idx) => {
