@@ -18,7 +18,6 @@ const App = props => {
         user: user
       })
     })
-    // eslint-disable-next-line
   }, [])
 
   console.log(process.env.REACT_APP_GOOGLE_APPLICATION_CREDENTIALS)

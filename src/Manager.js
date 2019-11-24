@@ -1,5 +1,21 @@
 import React from 'react'
 import firebase from 'firebase'
+import styled from 'styled-components'
+
+const TemplateContainer = styled.div`
+  display: flex;
+  justify-content: space-between;
+  margin: 10px;
+  padding: 10px;
+  background: #20368F;
+  border-radius: 10px;
+  color: white;
+  font-size: 2em;
+`
+
+const ButtonContainer = styled.div`
+  display: flex;
+`
 
 const useFirebaseCollection = (path) => {
   const [documents, setDocuments] = React.useState([])
@@ -29,15 +45,17 @@ const Manager = props => {
   return <div>
     {templates.map((template, index) => {
       console.log(template)
-      return <div key={index}>
+      return <TemplateContainer key={index}>
         {template.data.formName}
-        <button onClick={e => {
-          perform.remove(template.id)
-        }}>remove</button>
-        <button onClick={e => {
-          props.history.push(`/manage/${template.id}`)
-        }}>view</button>
-      </div>
+        <ButtonContainer>
+          <button onClick={e => {
+            perform.remove(template.id)
+          }}>remove</button>
+          <button onClick={e => {
+            props.history.push(`/manage/${template.id}`)
+          }}>view</button>
+        </ButtonContainer>
+      </TemplateContainer>
     })}
   </div>
 }

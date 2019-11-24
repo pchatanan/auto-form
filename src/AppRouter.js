@@ -13,6 +13,8 @@ import styled from 'styled-components'
 import DownloadPage from './DownloadPage';
 
 const AppBackground = styled.div`
+  position: fixed;
+  overflow: auto;
   width: 100vw;
   height: 100vh;
   background: linear-gradient(0deg, #829CD0 0%, rgba(255,255,255,1) 100%);
@@ -48,14 +50,14 @@ const secureRoute = (Component) => props => {
 
 const AppRouter = secureRoute(props => {
   return <AppBackground>
-      <BrowserRouter style={{ width: '100vw', height: '100vh' }}>
-        <Route path='/' component={NavBar} />
-        <Route exact path='/define' component={AreaDefiner} />
-        <Route exact path='/detect' component={Detector} />
-        <Route path='/manage' component={Manager} />
-        <Route exact path='/manage/:id' component={ManageTemplate} />
-        <Route exact path='/manage/:id/:formId' component={ManageForm} />
-        <Route exact path='/download' component={DownloadPage} />
+    <BrowserRouter style={{ width: '100vw', height: '100vh' }}>
+      <Route path='/' component={NavBar} />
+      <Route exact path='/define' component={AreaDefiner} />
+      <Route exact path='/detect' component={Detector} />
+      <Route path='/manage' component={Manager} />
+      <Route exact path='/manage/:id' component={ManageTemplate} />
+      <Route exact path='/manage/:id/:formId' component={ManageForm} />
+      <Route exact path='/download' component={DownloadPage} />
     </BrowserRouter>
   </AppBackground>
 })

@@ -1,7 +1,6 @@
 import React from 'react'
 import firebase from 'firebase/app'
 import 'firebase/firestore'
-import { useArray } from './AreaDefiner';
 
 const DownloadPage = props => {
   const [templates, setTemplates] = React.useState([])
@@ -132,42 +131,44 @@ const DownloadPage = props => {
   }
 
   return <div>
-    <h1>Download .csv file</h1>
-    <h3>Select form(s) to download</h3>
-    {templates.map((template, index) => {
-      return <div key={index}>
-        <input type='checkbox' onChange={e => {
-          var temp = [...templates]
-          temp[index].selected = e.target.checked
-          setTemplates(temp)
-        }} />
-        {template.data.formName}
-      </div>
-    })}
-    <button onClick={e => {
-      templates.filter(template => template.selected).forEach(template => {
-        firebase.firestore().collection('templates').doc(template.id).collection('data').get()
-          .then((querySnapshot) => {
-            var temp = []
-            querySnapshot.forEach(doc => {
-              temp.push(doc.data())
-            })
-            var newTemplate = { ...template }
-            newTemplate.forms = temp
-            setTemplates(oldTemplates => {
-              var newTemplates = [...oldTemplates]
-              var index = 0
-              newTemplates.forEach((t, idx) => {
-                if (t.id === newTemplate.id) {
-                  index = idx
-                }
+    <h1 style={{ textAlign: 'center' }}>Download .csv file</h1>
+    <h3 style={{ textAlign: 'center' }}>Select form(s) to download</h3>
+    <div style={{ textAlign: 'center' }}>
+      {templates.map((template, index) => {
+        return <div key={index}>
+          <input type='checkbox' onChange={e => {
+            var temp = [...templates]
+            temp[index].selected = e.target.checked
+            setTemplates(temp)
+          }} />
+          {template.data.formName}
+        </div>
+      })}
+      <button onClick={e => {
+        templates.filter(template => template.selected).forEach(template => {
+          firebase.firestore().collection('templates').doc(template.id).collection('data').get()
+            .then((querySnapshot) => {
+              var temp = []
+              querySnapshot.forEach(doc => {
+                temp.push(doc.data())
               })
-              newTemplates[index] = newTemplate
-              return newTemplates
+              var newTemplate = { ...template }
+              newTemplate.forms = temp
+              setTemplates(oldTemplates => {
+                var newTemplates = [...oldTemplates]
+                var index = 0
+                newTemplates.forEach((t, idx) => {
+                  if (t.id === newTemplate.id) {
+                    index = idx
+                  }
+                })
+                newTemplates[index] = newTemplate
+                return newTemplates
+              })
             })
-          })
-      })
-    }}>Download Now</button>
+        })
+      }}>Download Now</button>
+    </div>
   </div>
 }
 

@@ -128,22 +128,24 @@ const Detector = props => {
       </div>}
     </div>
     <button onClick={e => {
-      console.log(dataUrls)
-      var dataDocId
+      var dataDocId // variable for Firestore doc reference id
+      // Create empty doc reference
       firebase.firestore().collection('templates').doc(selectedTemplateId).collection('data').add({})
         .then(docRef => {
-          dataDocId = docRef.id
+          dataDocId = docRef.id // assign id to the empty variable
           setFormId(dataDocId)
-          // Create a root reference
-          var storageRef = firebase.storage().ref();
+          // Create a root reference for Firebase Storage
+          var storageRef = firebase.storage().ref()
+          // Iterate each text area and upload images on Firebase Storage
           items.forEach((item, index) => {
             var dataURL = dataUrls[item.name]
-            // Create a reference to 'mountains.jpg'
             var testRef = storageRef.child(`templates/${selectedTemplateId}/data/${dataDocId}/${item.name}.jpg`);
             testRef.putString(dataURL, 'data_url').then((snapshot) => {
               console.log(`${item.name}: Uploaded !`)
+              // For each text image, retrieve Download Url after upload finished
               snapshot.ref.getDownloadURL().then((downloadURL) => {
                 console.log("File available at", downloadURL);
+                // The image url is then sent to Firebase Cloud Function as a payload for Google OCR API
                 var readHandwriting = firebase.functions().httpsCallable('readHandwriting');
                 readHandwriting({ downloadURL }).then((result) => {
                   // Read result of the Cloud Function.
@@ -173,7 +175,9 @@ const Detector = props => {
         }
       })
       temp.Notes = []
-      firebase.firestore().collection('templates').doc(selectedTemplateId).collection('data').doc(formId).set(temp)
+      firebase.firestore()
+        .collection('templates').doc(selectedTemplateId)
+        .collection('data').doc(formId).set(temp)
         .then(() => {
           console.log("Document successfully written!");
           props.history.push('/')
