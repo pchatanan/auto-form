@@ -13,14 +13,14 @@ const NavBarContainer = styled.div`
 `
 
 const NavBarContainerHome = styled.div`
-  display: flex;
-  justify-content: space-around;
+  display: block;
   width: 100vw;
   height: 100px;
   padding-left: 5px;
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
+  text-align: center;
 `
 
 const MenuButton = styled.button`
@@ -42,6 +42,7 @@ const MenuButtonHome = styled.button`
   display: inline-block;
   height: 100%;
   width: 10em;
+  height: 3em;
   margin: 10px 5px;
   background: #20368F;
   border: none;
@@ -62,6 +63,11 @@ const DescriptionDev = styled.div`
   width: 10em;
 `
 
+const InlineBlock = styled.div`
+  display: inline-block;
+  vertical-align: top;
+`
+
 const NavBar = props => {
   const { pathname } = props.location
   if (pathname !== '/') {
@@ -77,22 +83,22 @@ const NavBar = props => {
   }
   else {
     return <NavBarContainerHome>
-      <div>
+      <InlineBlock>
         <Link to='/define' ><MenuButtonHome>Define</MenuButtonHome></Link>
         <DescriptionDev>Select the areas for the application to scan</DescriptionDev>
-      </div>
-      <div>
+      </InlineBlock>
+      <InlineBlock>
         <Link to='/detect' ><MenuButtonHome>Detect</MenuButtonHome></Link>
         <DescriptionDev>Detect, convert then save the written text within the selected areas</DescriptionDev>
-      </div>
-      <div>
+      </InlineBlock>
+      <InlineBlock>
         <Link to='/manage' ><MenuButtonHome>Manage</MenuButtonHome></Link>
         <DescriptionDev>View and edit patients' data</DescriptionDev>
-      </div>
-      <div>
+      </InlineBlock>
+      <InlineBlock>
         <Link to='/download' ><MenuButtonHome>Download</MenuButtonHome></Link>
         <DescriptionDev>Download selected patients' data as a CSV file</DescriptionDev>
-      </div>
+      </InlineBlock>
       <MenuButtonHome onClick={e => {
         firebase.auth().signOut()
       }}>Logout</MenuButtonHome>
